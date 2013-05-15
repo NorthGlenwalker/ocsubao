@@ -233,13 +233,9 @@ DefinePosition()
 
 DoButtonOrder()
 {   // -- Set the button order and reset display
-    // -- llOwnerSay("Old Position: "+(string)(oldPos)+" :: New Position: "+(string)(newPos));
     list _tempList = [];
     integer _oldPos = llList2Integer(primOrder,oldPos);
-    // -- llOwnerSay("Position "+(string)oldPos+" in 'primOrder' is "+(string)_oldPos);
     integer _newPos = llList2Integer(primOrder,newPos);
-    // -- llOwnerSay("Position "+(string)newPos+" in 'primOrder' is "+(string)_newPos);
-    
     integer _length = llGetListLength(primOrder);
     integer i = 2;
     _tempList += [0,1];
@@ -265,7 +261,6 @@ DoButtonOrder()
     primOrder = _tempList;
     oldPos = -1;
     newPos = -1;
-    
     DefinePosition();
 }
 
@@ -347,7 +342,6 @@ default
     {        
         if (attached==NULL_KEY)  // Being detached
         {
-            // -- Hidden = FALSE; -- Fixes Issue 615:       HUD forgets hide setting on relog.
             return;
         }
         
@@ -372,9 +366,7 @@ default
     
     link_message(integer sender, integer num, string str, key id)
     {
-        
-        // -- llOwnerSay(llGetScriptName()+": ["+(string)num+"] "+str+" ("+(string)id+")");
-        
+                
         if(num == SUBMENU && str == submenu)
         {
             currentmenu = submenu;
@@ -384,16 +376,12 @@ default
             text += "[Vertical] sets the button layout to Vertical.\n\n";
             text += "[Textures] opens a sub menu to choose button texture.\n\n";
             text += "[Order] opens the sub menus to reorder the buttons.\n\n";
-            //text += "[Reset] Resets ALL custom HUD settings.\n";
             
             list buttons = [];
             buttons += ["Horizontal"];   
             buttons += ["Vertical"]; 
             buttons += ["Textures"];
             buttons += ["Order"];
-            //buttons += [" "];
-            //buttons += ["Reset"];
-            //buttons += [" "];
             
             list utility = [UPMENU];
 
@@ -407,8 +395,6 @@ default
         
         else if(num == OPTIONS)
         {
-            // --  llOwnerSay("We hit the HUD Options, Options LM: "+str);
-            
             if(str == LOCK)
             {
                 // -- Position in link is 2
@@ -541,7 +527,6 @@ default
                         text += "change the color of the HUD buttons.\n";
                         if(tintable) text+="Tint will allow you to change the HUD color\nto various shades via the 'Tint' menu.\n";
                         if(!tintable)text += "If [White] is selected, an extra menu named 'Tint' will appear in this menu.\n";
-                        // -- text += "This menu will time out in " + (string)timeout + " seconds.";
                     
                         list buttons = [];
                         buttons += ["Gray Square"];
@@ -561,7 +546,6 @@ default
                         
                         string text = "This is the order menu, simply select the\n";
                         text += "button which you want to re-order.\n\n";
-                        // -- text += "This menu will time out in " + (string)timeout + " seconds.";
                         
                         list buttons = [];
                         integer i;

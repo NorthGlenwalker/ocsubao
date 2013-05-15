@@ -52,7 +52,6 @@ integer nGetOwnerChannel(key owner, integer nOffset)
     return chan;
 }
 
-
 init()
 {
     objectID = llGetKey();
@@ -96,7 +95,6 @@ default
     }
     link_message(integer sender, integer num, string str, key id)
     {
-        //debug("LinkMsg: " + str);
         if (num == COLLAR_INT_REQ)
         {
             if (collarID != NULL_KEY)
@@ -155,7 +153,6 @@ default
     }
     listen(integer channel, string name, key id, string message)
     {
-        //debug("Listen: " + message);
         //do nothing if wearer isnt owner of the object
         if (llGetOwnerKey(id) != wearer)
         {
@@ -167,7 +164,6 @@ default
             collarID = id;
             llListenRemove(listenHandle);
             listenHandle = llListen(interfaceChannel, "", collarID, "");
-            //llMessageLinked(LINK_THIS, COLLAR_INT, message, "");
             llMessageLinked(LINK_THIS, COLLAR_INT_REQ, "CollarOn", "");
             return;
         } //Collar said it got detached

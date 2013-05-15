@@ -26,18 +26,11 @@
 //
 // ZHAO_SITANYWHERE_ON                 Sit Anywhere mod On //added to OC sub AO hud by melanie Burnstein
 // ZHAO_SITANYWHERE_OFF                Sit Anywhere mod Off //added to OC sub AO hud by melanie Burnstein
-
-
-
-
+//
 // Added for OCCuffs:
 // ZHAO_PAUSE                           Stops the AO temporary, AO gets reactivated on next rez if needed
 // ZHAO_UNPAUSE                         Restart the AO if it was paused
 // End of add OCCuffs
-
-
-
-
 //
 // So, to send a command to the ZHAO-II engine, send a linked message:
 //
@@ -45,6 +38,7 @@
 //
 // This script uses a listener on channel -91234. If other scripts are added to the ZHAO, make sure 
 // they don't use the same channel
+//
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -114,18 +108,16 @@
 //          Reduce script count, since idle scripts take up scheduler time
 //          Tokenize notecard reader, to simplify notecard setup
 //          Remove scripted texture changes, to simplify customization by animation sellers
-
+//
 // Fennec Wind, January 18th, 2007:
 //          Changed Walk/Sit/Ground Sit dialogs to show animation name (or partial name if too long) 
 //          and only show buttons for non-blank entries.
 //          Fixed minor bug in the state_entry, ground sits were not being initialized.
 //
-
 // Dzonatas Sol, 09/06: Fixed forward walk override (same as previous backward walk fix). 
-
-
+//
 // Based on Francis Chung's Franimation Overrider v1.8
-
+//
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation; either version 2 of the License, or
@@ -135,13 +127,14 @@
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-
+//
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
-
+//
 // CONSTANTS
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // Default notecard we read on script_entry
 string defaultNoteCard = "Default";
 
@@ -267,7 +260,7 @@ key typingAnim = "c541c47f-e0c0-058b-ad1a-d6ae3a4584d9";
 integer listenChannel = -91234;
 
 // GLOBALS
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 integer numStands;                          // Number of stands - needed for auto cycle
 integer randomStands = FALSE;               // Whether stands cycle randomly
@@ -341,7 +334,7 @@ key whoid;
 integer g_iJustRezed;
 
 // CODE
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////
 
 key ShortKey()
 {//just pick 8 random hex digits and pad the rest with 0.  Good enough for dialog uniqueness.
@@ -494,7 +487,6 @@ animOverride() {
         }        
         else if (!sitAnywhereOn) { // Sity Anywhere is ON
             startNewAnimation( curStandAnim, standingIndex, curAnimState );
-             
         }
         else if (sitAnywhereOn) {
             startNewAnimation( curGsitAnim, sitgroundIndex, curAnimState );
@@ -539,7 +531,6 @@ doNextStand(integer fromUI) {
         } else {
             curStandIndex = (curStandIndex + 1) % numStands;
         }
-
         curStandAnim = findMultiAnim( standingIndex, curStandIndex );
         if ( lastAnimState == "Standing" && standOverride)        
             startNewAnimation( curStandAnim, standingIndex, lastAnimState );
@@ -666,7 +657,6 @@ loadNoteCard() {
         notecardName = EMPTY;
         return;
     }
-    //added for issue 895
     if (!g_iJustRezed)
     {
         Notify(whoid, "Loading notecard '" + notecardName + "'...", FALSE );
@@ -708,8 +698,6 @@ initialize()
 {
     Owner = llGetOwner();
     whoid=Owner;
-    
-    //added for issue 895
     g_iJustRezed = TRUE;
 
 // Added for OCCuffs: Changed 1 line
@@ -717,15 +705,11 @@ initialize()
         llSetTimerEvent( timerEventLength );
     else
         llSetTimerEvent( 0 );
-
     lastAnim = EMPTY;
     lastAnimSet = EMPTY;
     lastAnimIndex = noAnimIndex;
     lastAnimState = EMPTY;
     gotPermission = FALSE;
-    
-    //removed per issue 895
-    //printFreeMemory();
 }
 
 Notify(key id, string msg, integer alsoNotifyWearer) {
@@ -748,18 +732,14 @@ Notify(key id, string msg, integer alsoNotifyWearer) {
 }
 
 // STATE
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////
 
 default {
     state_entry() {
         integer i;
-
         Owner = llGetOwner();
-        
-        
         if ( llGetAttached() )
             llRequestPermissions( llGetOwner(), PERMISSION_TRIGGER_ANIMATION|PERMISSION_TAKE_CONTROLS );
-
         numOverrides = llGetListLength( tokens );
 
         // Type convert strings to keys :P
@@ -767,7 +747,6 @@ default {
             key k = llList2Key( autoDisableList, i );
             autoDisableList = llListReplaceList ( autoDisableList, [ k ], i, i );
         }
-
         // populate override list with blanks
         overrides = [];
         for ( i=0; i<numOverrides; i++ ) {
@@ -783,7 +762,6 @@ default {
         // turn off the auto-stop anim hack
         if ( autoStopTime == 0 )
             autoStop = [];
-
         llResetTime();
     }
 
@@ -861,7 +839,6 @@ default {
                     // old listen system
                     return;
                 }
-                
             }
         }
         else if(_num == DIALOG_TIMEOUT)
@@ -878,9 +855,7 @@ default {
     if ( llGetSubString(_message, 0, 4) == "ZHAO_" )
         // now process zhao messages
     {
-    
-
-        // thius line cause the IM error, as it was called when ANY LinkedMessage was received,, i hope it is fixed when we oly react on "ZHAO" messages
+        // this line cause the IM error, as it was called when ANY LinkedMessage was received,, i hope it is fixed when we only react on "ZHAO" messages
         if (_id) whoid = _id;
         
         // Coming from an interface script
@@ -971,7 +946,6 @@ default {
                 // Turning on sit anywhre mod
                 sitAnywhereOn = TRUE;
             standOverride = FALSE;
-            //llOwnerSay( S_SIT_AW + "On" );
             if ( lastAnimState == "Standing" )
                 startNewAnimation( curGsitAnim, sitgroundIndex, lastAnimState );
 
@@ -979,7 +953,6 @@ default {
                 // Turning off sit anywhere mod
                 sitAnywhereOn = FALSE;
             standOverride = TRUE;
-            //llOwnerSay( S_SIT_AW + "Off" );
             if ( lastAnimState == "Standing" )
                 startNewAnimation( curStandAnim, standingIndex, lastAnimState );
 
@@ -1030,7 +1003,7 @@ default {
                     Notify(whoid, "Cannot load new notecard, still reading notecard '" + notecardName + "'", FALSE );
                     return;
                 }
-
+                
             // Notecard menu
             g_iJustRezed = FALSE;
             loadInProgress = TRUE;
@@ -1040,22 +1013,16 @@ default {
 
         } else if ( _message == "ZHAO_SITS" ) {
                 // Selecting new sit anim
-
                 // Move these to a common function
                 doMultiAnimMenu(_id, sittingIndex, "Sitting", curSitAnim );
-
             listenState = 1;
-
         } else if ( _message == "ZHAO_WALKS" ) {
                 // Same thing for the walk
-
                 // Move these to a common function
                 doMultiAnimMenu(_id, walkingIndex, "Walking", curWalkAnim );
-
             listenState = 2;
         } else if ( _message == "ZHAO_GROUNDSITS" ) {
                 // And the ground sit
-
                 // Move these to a common function
                 doMultiAnimMenu(_id, sitgroundIndex, "Sitting On Ground", curGsitAnim );
 
@@ -1068,16 +1035,13 @@ default {
 
         if ( _query_id != notecardLineKey ) {
             Notify(whoid, "Error in reading notecard. Please try again.", FALSE );
-
             endNotecardLoad();
             return;
         }
 
         if ( _data == EOF ) {
             // Now the read ends when we hit EOF
-
             // End-of-notecard handling...
-
              // Do we have a walking animation?
             if ( llList2String(overrides, walkingIndex) != EMPTY ) {
                  haveWalkingAnim = TRUE;
@@ -1111,16 +1075,13 @@ default {
             }
             else
             {
-                //added for issue 895
                 Notify(whoid, "Finished reading notecard '" + notecardName + "'.", FALSE );
                 printFreeMemory();
             }
-            
-
             endNotecardLoad();
             return;
         }
-
+        
         // We ignore blank lines and lines which start with a #
         if (( _data == EMPTY ) || ( llGetSubString(_data, 0, 0) == "#" )) {
             notecardLineKey = llGetNotecardLine( notecardName, ++notecardIndex );
@@ -1192,19 +1153,15 @@ default {
         notecardLineKey = llGetNotecardLine( notecardName, ++notecardIndex );
         return;
     }
-
     collision_start( integer _num ) {
         checkAndOverride();
     }
-
     collision( integer _num ) {
         checkAndOverride();
     }
-
     collision_end( integer _num ) {
         checkAndOverride();
     }
-
     control( key _id, integer _level, integer _edge ) {
         if ( _edge ) {
             // SL tends to mix animations together on forward or backward walk. It could be because

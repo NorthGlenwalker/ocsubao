@@ -27,17 +27,12 @@
 // ZHAO_GROUNDSITS                     Select a ground sit
 // ZHAO_WALKS                          Select a walk
 //
-
-
-
+//
 // Added for OCCuffs:
 // ZHAO_PAUSE                           Stops the AO temporary, AO gets reactivated on next rez if needed
 // ZHAO_UNPAUSE                         Restart the AO if it was paused
 // End of add OCCuffs
-
-
-
-
+//
 // So, to send a command to the ZHAO-II engine, send a linked message:
 //
 //   llMessageLinked(LINK_SET, 0, "ZHAO_AOON", NULL_KEY);
@@ -51,18 +46,17 @@
 //          scheduler time
 //          Tokenize notecard reader, to simplify notecard setup
 //          Remove scripted texture changes, to simplify customization by animation sellers
-
+//
 // Fennec Wind, January 18th, 2007:
 //          Changed Walk/Sit/Ground Sit dialogs to show animation name (or partial name if too long)
 //          and only show buttons for non-blank entries.
 //          Fixed minor bug in the state_entry, ground sits were not being initialized.
 //
-
+//
 // Dzonatas Sol, 09/06: Fixed forward walk override (same as previous backward walk fix).
-
-
+//
 // Based on Francis Chung's Franimation Overrider v1.8
-
+//
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation; either version 2 of the License, or
@@ -72,7 +66,7 @@
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-
+//
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307, USA.
@@ -162,9 +156,9 @@ integer menustride = 3;
 string MENU = "DoMenu";
 string OCMENU = "FirstMenu";
 
-
 // CODE
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 key ShortKey()
 {    // just pick 8 random hex digits and pad the rest with 0.  Good enough for dialog uniqueness.
     string chars = "0123456789abcdef";
@@ -176,7 +170,6 @@ key ShortKey()
         integer index = (integer)llFrand(16);//yes this is correct; an integer cast rounds towards 0.  See the llFrand wiki entry.
         out += llGetSubString(chars, index, index);
     }
-     
     return (key)(out + "-0000-0000-0000-000000000000");
 }
 
@@ -187,7 +180,6 @@ key Dialog(key rcpt, string prompt, list choices, list utilitybuttons, integer p
  "|" + llDumpList2String(choices, "`") + "|" + llDumpList2String(utilitybuttons, "`"), id);
     return id;
 }
-
 
 // Initialize listeners, and reset some status variables
 Initialize() {
@@ -269,7 +261,6 @@ DoMenu(key id, integer page)
             {
                 mainMenu += [LOCK];
             }
-            
         }
         else
         {
@@ -302,9 +293,7 @@ DoMenu(key id, integer page)
         mainMenu = ["Update", "Load"];
         prompt = "Currently in UPDATE mode since the AO is not attached.\n";
     }
-        
     listenState = 0;
-    
     key menuid = Dialog(id, prompt, mainMenu, [], page);
     
     // UUID , Menu ID, Menu
@@ -319,8 +308,7 @@ DoMenu(key id, integer page)
     else
     { //this person is already in the dialog list.  replace their entry
         menuids = llListReplaceList(menuids, newstride, index, index - 1 + menustride);
-    }   
-    
+    }
 }
 
 TurnOn()
@@ -328,18 +316,15 @@ TurnOn()
     zhaoOn = TRUE;
     llMessageLinked(LINK_SET, COMMAND_AUTH, "ZHAO_AOON", "");
     llMessageLinked(LINK_SET, OPTIONS, "ZHAO_AOON", "");
-    //llSetLinkColor(2, onColor, ALL_SIDES);
 }
 
 TurnOff()
 {
-    // llSetLinkColor(2, offColor, ALL_SIDES); // needed?
     if (sitAnywhere)
     {
         ToggleSitAnywhere();
     }
     zhaoOn = FALSE;
-    //llSetLinkColor(2, offColor, ALL_SIDES);
     llMessageLinked(LINK_THIS, COMMAND_AUTH, "ZHAO_AOOFF", "");
     llMessageLinked(LINK_SET, OPTIONS, "ZHAO_AOOFF", "");
 }
@@ -355,13 +340,11 @@ ToggleSitAnywhere()
     {
         if (sitAnywhere == TRUE) 
         {
-            //llSetLinkColor(3, offColor, ALL_SIDES);
             llMessageLinked(LINK_THIS, COMMAND_AUTH, "ZHAO_SITANYWHERE_OFF", NULL_KEY);
             llMessageLinked(LINK_THIS, OPTIONS, "ZHAO_SITANYWHERE_OFF", NULL_KEY);
         } 
         else 
         {
-            //llSetLinkColor(3, onColor, ALL_SIDES);
             llMessageLinked(LINK_THIS, COMMAND_AUTH, "ZHAO_SITANYWHERE_ON", NULL_KEY);
             llMessageLinked(LINK_THIS, OPTIONS, "ZHAO_SITANYWHERE_ON", NULL_KEY);
         }
@@ -398,7 +381,7 @@ integer isAttachedToHUD()
 }
 
 // STATE
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 debug(string str)
 {
@@ -409,7 +392,6 @@ default {
     state_entry() {
         integer i;
         Initialize();
-        // DoPosition();
 
         // Sleep a little to let other script reset (in case this is a reset)
         llSleep(2.0);
@@ -471,7 +453,6 @@ default {
                     }
                     lockerID = id;
                     Notify(id, "The AO has been locked.", TRUE);
-                    //llSetLinkTexture(2, AO_LOCKED, ALL_SIDES);
                 }
                 else if (!collarIntegration)
                 {
@@ -492,7 +473,6 @@ default {
                         llOwnerSay("@detach=y");
                     }
                     Notify(id, "The AO has been unlocked.", TRUE);
-                    //llSetLinkTexture(2, AO_UNLOCKED, ALL_SIDES);
                 }
                 else
                 {
@@ -533,9 +513,7 @@ default {
                     llOwnerSay("@detach=y");
                 }
                 llMessageLinked(LINK_THIS, OPTIONS, UNLOCK, id);
-                Notify(lockerID, "The AO has been unlocked due to safeword usage.", TRUE);
-                //llSetLinkTexture(2, AO_UNLOCKED, ALL_SIDES);
-                
+                Notify(lockerID, "The AO has been unlocked due to SAFEWORD usage.", TRUE);
             }
         }
         else if (num == DIALOG_RESPONSE)
@@ -622,11 +600,6 @@ default {
                     else if ( _message == "Load" ) 
                     {
                         integer n = llGetInventoryNumber( INVENTORY_NOTECARD );
-                        // Can only have 12 buttons in a dialog box
-                        //if ( n > 12 ) {
-                        //    llOwnerSay( "You cannot have more than 12 animation notecards." );
-                        //    return;
-                        //}
                         integer i;
                         list animSets = [];
                         // Build a list of notecard names and present them in a dialog box
@@ -635,9 +608,7 @@ default {
                             if ( notecardName != helpNotecard && notecardName != license)
                             animSets += [ notecardName ];
                         }
-                        //llListenControl(listenHandle, TRUE);
                         string text = "Select the notecard to load:";
-                        
                         key menuid = Dialog(_id, text, animSets, [], 0);
     
                         // UUID , Menu ID, Menu
@@ -714,7 +685,6 @@ default {
                     }
                     else if (_message == ">")
                     {
-                        //DoSecMenu(_id);
                         DoMenu(_id,page);
                     }
                     else if (_message == "<")
@@ -911,7 +881,6 @@ default {
             if( isAttachedToHUD() )
             {
                 llSetLinkAlpha(LINK_SET, 1.0, ALL_SIDES);
-                // DoPosition();
             }
             else
             {
@@ -922,7 +891,6 @@ default {
                 wasDetached = FALSE; // -- Already notified, set to false. If it happens again it will be set once more when detached.
                 Notify(lockerID, llKey2Name(Owner) + " has attached the AO again after it was detached while locked.", TRUE);
             }
-            
         }
         else
         {
